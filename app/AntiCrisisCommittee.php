@@ -62,9 +62,7 @@ class AntiCrisisCommittee
                 usort($analytics, function ($a, $b) {
                     return $a->getRank() <=> $b->getRank();
                 });
-                if ($highRankAnalytic = array_pop($analytics)) {
-                    $highRankAnalytic->inverseLeader();
-                }
+                array_pop($analytics)->inverseLeader();
                 $leader->inverseLeader();
             }
         }
