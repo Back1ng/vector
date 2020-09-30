@@ -38,8 +38,8 @@ function write($vector) {
         .padLeft($vector->getAverageConsumptionMoneyPerPage(), 11) . PHP_EOL;
     echo padRight('Всего', 11)
         .padLeft($vector->getCountEmployee(), 11)
-        .padLeft($vector->getAverageMoneyExpenses(), 11)
-        .padLeft($vector->getAverageCoffeeExpenses(), 11)
+        .padLeft($vector->getMoneyExpenses(), 11)
+        .padLeft($vector->getCoffeeExpenses(), 11)
         .padLeft($vector->getReports(), 11)
         .padLeft($vector->getConsumptionMoneyPerPage(), 11) . PHP_EOL;
 }
