@@ -14,8 +14,6 @@ class Company
     private array $departments = [];
 
     /**
-     * Добавление отдела в общий список
-     *
      * @param Department $department
      * @return $this
      */
@@ -27,56 +25,64 @@ class Company
     }
 
     /**
-     * Получить количество сотрудников во всех отделах
-     *
      * @return int
      */
     public function getCountEmployee() : int
     {
         $data = 0;
+
         foreach ($this->departments as $department) {
             $data += $department->getCountEmployee();
         }
+
         return $data;
     }
 
     /**
-     * Получить расходы сотрудников на зарплату и кофе в каждом отделе
-     *
-     * @return array
+     * @return int
      */
-    public function getExpenses() : array
+    public function getMoneyExpenses()
     {
         $rate = 0;
-        $coffee = 0;
 
         foreach ($this->departments as $department) {
-            $rate   += $department->getMoneyExpenses();
-            $coffee += $department->getCoffeeExpenses();
+            $rate += $department->getMoneyExpenses();
         }
 
-        return [$rate, $coffee];
+        return $rate;
     }
 
     /**
-     * Получить средний расход зарплаты и кофе на отдел
-     *
-     * @return float[]|int[]
+     * @return int
      */
-    public function getAverageExpenses() : array
+    public function getCoffeeExpenses()
     {
-        $rate = 0;
         $coffee = 0;
 
         foreach ($this->departments as $department) {
-            $rate   += $department->getMoneyExpenses();
             $coffee += $department->getCoffeeExpenses();
         }
 
-        return [
-            $rate / count($this->getDepartments()),
-            $coffee / count($this->getDepartments())
-        ];
+        return $coffee;
+    }
+
+    public function getAverageMoneyExpenses()
+    {
+        $rate = $this->getMoneyExpenses();
+
+        return $rate / $this->getCountDepartments();
+    }
+
+    public function getAverageCoffeeExpenses()
+    {
+        $coffee = $this->getCoffeeExpenses();
+
+        return $coffee / $this->getCountDepartments();
+    }
+
+    public function getCountDepartments()
+    {
+        return count($this->departments);
     }
 
     /**
@@ -87,9 +93,11 @@ class Company
     public function getReports() : float
     {
         $reports = 0;
+
         foreach ($this->departments as $department) {
             $reports += $department->getReports();
         }
+
         return $reports;
     }
 
@@ -100,11 +108,9 @@ class Company
      */
     public function getAverageReports() : float
     {
-        $reports = 0;
-        foreach ($this->departments as $department) {
-            $reports += $department->getReports();
-        }
-        return $reports / count($this->getDepartments());
+        $reports = $this->getReports();
+
+        return $reports / $this->getCountDepartments();
     }
 
     /**
@@ -114,11 +120,9 @@ class Company
      */
     public function getAverageConsumptionMoneyPerPage() : float
     {
-        $moneyConsumption = 0;
-        foreach ($this->departments as $department) {
-            $moneyConsumption += $department->getAverageConsumptionMoneyPerPage();
-        }
-        return $moneyConsumption / count($this->getDepartments());
+        $money = $this->getConsumptionMoneyPerPage();
+
+        return $money / $this->getCountDepartments();
     }
 
     /**
@@ -129,15 +133,15 @@ class Company
     public function getConsumptionMoneyPerPage() : float
     {
         $moneyConsumption = 0;
+
         foreach ($this->departments as $department) {
             $moneyConsumption += $department->getAverageConsumptionMoneyPerPage();
         }
+
         return $moneyConsumption;
     }
 
     /**
-     * Возвращает массив с отделами
-     *
      * @return array
      */
     public function getDepartments() : array
@@ -146,16 +150,12 @@ class Company
     }
 
     /**
-     * Получить среднее количество сотрудников по отделам
-     *
      * @return float
      */
     public function getAverageCountEmployees() : float
     {
-        $countEmployees  = 0;
-        foreach ($this->departments as $department) {
-            $countEmployees += $department->getCountEmployee();
-        }
-        return $countEmployees / count($this->getDepartments());
+        $countEmployees = $this->getCountEmployee();
+
+        return $countEmployees / $this->getCountDepartments();
     }
 }

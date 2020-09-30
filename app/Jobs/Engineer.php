@@ -6,9 +6,18 @@ use App\Job;
 
 class Engineer extends Job
 {
-    protected $rate   = 200;
+    /**
+     * @var int
+     */
+    protected int $rate = 200;
 
-    protected $coffee = 5;
+    /**
+     * @var int
+     */
+    protected int $coffee = 5;
 
-    protected $report = 50;
+    /**
+     * @var int
+     */
+    protected int $report = 50;
 }

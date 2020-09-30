@@ -29,8 +29,6 @@ class Department
     }
 
     /**
-     * Добавляет сотрудника в отдел
-     *
      * @param Employee $employee
      * @param int $count
      * @return $this
@@ -47,7 +45,7 @@ class Department
     }
 
     /**
-     * Получить количество сотрудников в отделе
+     * Получить список сотрудников в отделе
      *
      * @return array
      */
@@ -57,23 +55,6 @@ class Department
     }
 
     /**
-     * Возвращает руководителя отдела
-     *
-     * @return Employee|false
-     */
-    public function getLeader()
-    {
-        foreach ($this->getEmployees() as $employee) {
-            if ($employee->isLeader()) {
-                return $employee;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Получить количество сотрудников в отделе
-     *
      * @return int
      */
     public function getCountEmployee() : int
@@ -82,8 +63,6 @@ class Department
     }
 
     /**
-     * Получить расходы на зарплату
-     *
      * @return int
      */
     public function getMoneyExpenses() : int
@@ -98,8 +77,6 @@ class Department
     }
 
     /**
-     * Получить расходы на кофе
-     *
      * @return int
      */
     public function getCoffeeExpenses() : int
@@ -114,8 +91,6 @@ class Department
     }
 
     /**
-     * Получить вырабатываемое количество отчетов в отделе
-     *
      * @return float
      */
     public function getReports() : float
@@ -130,8 +105,6 @@ class Department
     }
 
     /**
-     * Получить имя отдела
-     *
      * @return string
      */
     public function getName() : string
@@ -140,8 +113,6 @@ class Department
     }
 
     /**
-     * Получить средний расход денег за страницу
-     *
      * @return float
      */
     public function getAverageConsumptionMoneyPerPage() : float
@@ -150,8 +121,6 @@ class Department
     }
 
     /**
-     * Увольняет сотрудника из отдела
-     *
      * @param Employee $employee
      * @return $this
      */
@@ -168,9 +137,6 @@ class Department
     }
 
     /**
-     * Выбирает сотрудников по типу работы
-     * Маркетинг, Аналитик и т.д.
-     *
      * @param Job $job
      * @return array
      */
@@ -188,8 +154,20 @@ class Department
     }
 
     /**
-     * Получить руководителей отдела
-     *
+     * @return Employee
+     */
+    public function getLeader() : Employee
+    {
+        foreach ($this->employees as $employee) {
+            if ($employee->isLeader()) {
+                return $employee;
+            }
+        }
+
+        return new NullEmployee();
+    }
+
+    /**
      * @return array
      */
     public function getLeaders() : array
@@ -206,8 +184,6 @@ class Department
     }
 
     /**
-     * Получить сотрудников по работе и рангу
-     *
      * @param Job $job
      * @param int $rank
      * @return array

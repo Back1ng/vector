@@ -32,14 +32,14 @@ function write($vector) {
     }
     echo padRight('Среднее', 11)
         .padLeft($vector->getAverageCountEmployees(), 11)
-        .padLeft($vector->getAverageExpenses()[0], 11)
-        .padLeft($vector->getAverageExpenses()[1], 11)
+        .padLeft($vector->getAverageMoneyExpenses(), 11)
+        .padLeft($vector->getAverageCoffeeExpenses(), 11)
         .padLeft($vector->getAverageReports(), 11)
         .padLeft($vector->getAverageConsumptionMoneyPerPage(), 11) . PHP_EOL;
     echo padRight('Всего', 11)
         .padLeft($vector->getCountEmployee(), 11)
-        .padLeft($vector->getExpenses()[0], 11)
-        .padLeft($vector->getExpenses()[1], 11)
+        .padLeft($vector->getAverageMoneyExpenses(), 11)
+        .padLeft($vector->getAverageCoffeeExpenses(), 11)
         .padLeft($vector->getReports(), 11)
         .padLeft($vector->getConsumptionMoneyPerPage(), 11) . PHP_EOL;
 }

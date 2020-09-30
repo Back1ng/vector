@@ -46,15 +46,18 @@ class Employee
      */
     private function calculateByRank(int $rank)
     {
+        $rate = $this->job->getRate();
+
         switch ($rank) {
             case 1:
-                return $this->job->getRate();
+                return $rate;
             case 2:
-                return $this->job->getRate() * 1.25;
+                return $rate * 1.25;
             case 3:
-                return $this->job->getRate() * 1.5;
+                return $rate * 1.5;
+            default:
+                return 0;
         }
-        return false;
     }
 
     /**
@@ -64,7 +67,8 @@ class Employee
      */
     public function getRate()
     {
-        $rate = $this->calculateByRank($this->getRank());
+        $rank = $this->getRank();
+        $rate = $this->calculateByRank($rank);
 
         if ($this->isLeader()) {
             $rate *= 1.5;
@@ -100,8 +104,6 @@ class Employee
     }
 
     /**
-     * Получить ранг сотрудника
-     *
      * @return int
      */
     public function getRank() : int
@@ -110,8 +112,6 @@ class Employee
     }
 
     /**
-     * Установить ранг сотрудника
-     *
      * @param int $rank
      * @return $this
      */
@@ -123,8 +123,6 @@ class Employee
     }
 
     /**
-     * Проверяет, является ли текущий сотрудник руководителем
-     *
      * @return bool
      */
     public function isLeader() : bool
@@ -133,8 +131,6 @@ class Employee
     }
 
     /**
-     * Возвращает профессию сотрудника
-     *
      * @return Job
      */
     public function getJob() : Job
@@ -143,8 +139,6 @@ class Employee
     }
 
     /**
-     * Меняет лидера на не лидера, и наоборот
-     *
      * @return $this
      */
     public function inverseLeader() : self
@@ -155,7 +149,7 @@ class Employee
     }
 
     /**
-     * Устанавливает новую работу
+     * Устанавливает новую работу.
      *
      * @param Job $job
      * @param int $rank
@@ -164,8 +158,8 @@ class Employee
      */
     public function setJob(Job $job, int $rank, bool $isLeader = false) : self
     {
-        $this->job      = $job;
-        $this->rank     = $rank;
+        $this->job = $job;
+        $this->rank = $rank;
         $this->isLeader = $isLeader;
 
         return $this;

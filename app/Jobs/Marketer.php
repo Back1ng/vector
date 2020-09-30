@@ -6,7 +6,18 @@ use App\Job;
 
 class Marketer extends Job
 {
-    protected $rate   = 400;
-    protected $coffee = 15;
-    protected $report = 150;
+    /**
+     * @var int
+     */
+    protected int $rate = 400;
+
+    /**
+     * @var int
+     */
+    protected int $coffee = 15;
+
+    /**
+     * @var int
+     */
+    protected int $report = 150;
 }
