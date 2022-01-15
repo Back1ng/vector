@@ -6,6 +6,10 @@ namespace App;
 
 abstract class Job
 {
+    protected int $rate;
+    protected int $coffee;
+    protected int $report;
+
     public function setRate(int $rate) : self
     {
         $this->rate = $rate;
