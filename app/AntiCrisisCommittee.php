@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 
 namespace App;
@@ -62,8 +62,8 @@ class AntiCrisisCommittee
                 usort($analytics, function ($a, $b) {
                     return $a->getRank() <=> $b->getRank();
                 });
-                array_pop($analytics)->inverseLeader();
-                $leader->inverseLeader();
+                array_pop($analytics)->defineAsLeader();
+                $leader->removeLeadership();
             }
         }
     }

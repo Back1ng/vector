@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 
 namespace App;
@@ -63,9 +63,9 @@ class Department
     }
 
     /**
-     * @return int
+     * @return float
      */
-    public function getMoneyExpenses() : int
+    public function getMoneyExpenses() : float
     {
         $money = 0;
 
@@ -73,7 +73,7 @@ class Department
             $money += $employee->getRate();
         }
 
-        return $money;
+        return round($money, 2);
     }
 
     /**
@@ -117,7 +117,11 @@ class Department
      */
     public function getAverageConsumptionMoneyPerPage() : float
     {
-        return round($this->getMoneyExpenses() / $this->getReports(), 2);
+        if ($this->getCountEmployee() > 0) {
+            return round($this->getMoneyExpenses() / $this->getReports(), 2);
+        }
+
+        return 0;
     }
 
     /**
@@ -126,12 +130,11 @@ class Department
      */
     public function dismissEmployee(Employee $employee) : self
     {
-        foreach ($this->employees as $id => $worker) {
-            if ($worker === $employee) {
-                unset($this->employees[$id]);
-                break;
-            }
+        if (is_int($id = array_search($employee, $this->employees))) {
+            unset($this->employees[$id]);
         }
+
+        $this->resetKeysEmployeers();
 
         return $this;
     }
@@ -199,5 +202,10 @@ class Department
         }
 
         return $data;
+    }
+
+    private function resetKeysEmployeers()
+    {
+        $this->employees = array_values($this->getEmployees());
     }
 }

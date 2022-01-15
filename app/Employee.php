@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 
 namespace App;
@@ -138,12 +138,19 @@ class Employee
         return $this->job;
     }
 
+    public function removeLeadership()
+    {
+        $this->isLeader = false;
+
+        return $this;
+    }
+
     /**
      * @return $this
      */
-    public function inverseLeader() : self
+    public function defineAsLeader() : self
     {
-        $this->isLeader = !$this->isLeader();
+        $this->isLeader = true;
 
         return $this;
     }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use App\AntiCrisisCommittee;
 use App\Company;
@@ -11,14 +11,14 @@ use App\Jobs\Marketer;
 
 require "../vendor/autoload.php";
 
-function padRight(string $string, int $length): string
+function padRight($string, int $length): string
 {
-    return $string . str_repeat(' ', $length - mb_strlen($string));
+    return $string . str_repeat(' ', $length - mb_strlen(strval($string)));
 }
 
-function padLeft(string $string, int $length): string
+function padLeft($string, int $length): string
 {
-    return str_repeat(' ', $length - mb_strlen($string)) . $string;
+    return str_repeat(' ', $length - mb_strlen(strval($string))) . $string;
 }
 
 function write($vector) {
