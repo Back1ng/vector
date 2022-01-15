@@ -5,6 +5,7 @@ use App\Employee;
 use App\Jobs\Analyst;
 use App\Jobs\Manager;
 use App\Jobs\Marketer;
+use App\Exceptions\LeaderNotFoundException;
 use PHPUnit\Framework\TestCase;
 
 class DepartmentTest extends TestCase
@@ -200,6 +201,13 @@ class DepartmentTest extends TestCase
         $this->assertEquals(1, $this->department->getCountEmployee());
         $this->assertEquals(1, count($this->department->getEmployeesByJob(new Manager())));
         $this->assertEquals(0, count($this->department->getEmployeesByJob(new Analyst())));
+    }
+
+    public function testGetLeaderThrowAnException()
+    {
+        $this->expectException(LeaderNotFoundException::class);
+
+        $this->department->getLeader();
     }
 
     private function addEmployees(bool $withLeadership = false)

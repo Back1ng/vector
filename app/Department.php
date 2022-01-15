@@ -3,6 +3,8 @@
 
 namespace App;
 
+use App\Exceptions\LeaderNotFoundException;
+
 
 /**
  * Управление сотрудниками в отделе
@@ -167,7 +169,7 @@ class Department
             }
         }
 
-        return new NullEmployee();
+        throw new LeaderNotFoundException();
     }
 
     /**
