@@ -40,9 +40,9 @@ class AntiCrisisCommittee
 
             $dismiss = array_slice($engineers, 0, intval(ceil(count($engineers) * 0.4)));
 
-            array_map(function ($employee) use ($department) {
+            array_walk($dismiss, function ($employee) use ($department) {
                 $department->dismissEmployee($employee);
-            }, $dismiss);
+            });
         }
     }
 
