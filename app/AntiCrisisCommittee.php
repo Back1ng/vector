@@ -38,7 +38,7 @@ class AntiCrisisCommittee
                 return $a->getRank() <=> $b->getRank();
             });
 
-            $dismiss = array_slice($engineers, 0, ceil(count($engineers) * 0.4));
+            $dismiss = array_slice($engineers, 0, intval(ceil(count($engineers) * 0.4)));
 
             array_map(function ($employee) use ($department) {
                 $department->dismissEmployee($employee);
@@ -78,8 +78,8 @@ class AntiCrisisCommittee
                 $employee->setRank($employee->getRank() + 1);
                 return $employee;
             }, array_merge(
-                array_slice($employeesFirstRank,  0, ceil(count($employeesFirstRank) * 0.5)),
-                array_slice($employeesSecondRank, 0, ceil(count($employeesSecondRank) * 0.5))
+                array_slice($employeesFirstRank,  0, intval(ceil(count($employeesFirstRank) * 0.5))),
+                array_slice($employeesSecondRank, 0, intval(ceil(count($employeesSecondRank) * 0.5)))
             ));
         }
     }
