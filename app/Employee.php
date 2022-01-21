@@ -34,7 +34,7 @@ class Employee
     {
         $this->rank     = $rank;
         $this->isLeader = $isLeader;
-        $this->job      = $job;
+        $this->job      = new $job;
     }
 
     /**
@@ -164,7 +164,7 @@ class Employee
      */
     public function setJob(Job $job, int $rank, bool $isLeader = false) : self
     {
-        $this->job = $job;
+        $this->job = new $job;
         $this->rank = $rank;
         $this->isLeader = $isLeader;
 
