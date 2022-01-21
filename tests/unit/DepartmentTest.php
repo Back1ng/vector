@@ -271,6 +271,6 @@ class DepartmentTest extends TestCase
             ->addEmployee(new Employee(new Engineer(), 1), 2)
             ->addEmployee(new Employee(new Marketer(), 3, true));
 
-        $this->assertEquals(1001.35, $ad->getConsumptionMoneyPerPage());
+        $this->assertEquals(2.99, $ad->getConsumptionMoneyPerPage());
     }
 }

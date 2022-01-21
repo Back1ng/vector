@@ -115,17 +115,11 @@ class Department
 
     public function getConsumptionMoneyPerPage()
     {
-        $money = 0;
-
-        foreach ($this->employees as $employee) {
-            if ($employee->getReport() === 0) {
-                $money += $employee->getRate();
-            } else {
-                $money += round($employee->getRate() / $employee->getReport(), 2);
-            }
+        if ($this->getReports() === 0) {
+            return $this->getMoneyExpenses();
+        } else {
+            return round($this->getMoneyExpenses() / $this->getReports(), 2);
         }
-
-        return $money;
     }
 
     /**

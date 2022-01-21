@@ -120,9 +120,11 @@ class Company
      */
     public function getAverageConsumptionMoneyPerPage() : float
     {
-        $money = $this->getConsumptionMoneyPerPage();
-
-        return $money / $this->getCountDepartments();
+        if ($this->getReports() === 0) {
+            return $this->getMoneyExpenses();
+        } else {
+            return round($this->getMoneyExpenses() / $this->getReports(), 2);
+        }
     }
 
     /**

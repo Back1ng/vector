@@ -36,7 +36,7 @@ class CompanyTest extends TestCase
     public function testGetAverageConsumptionMoneyPerPage()
     {
         $this->company->getDepartments()[0]->getEmployees()[0]->getJob()->setRate(801);
-        $this->assertEquals(407.005, $this->company->getAverageConsumptionMoneyPerPage());
+        $this->assertEquals(6.64, $this->company->getAverageConsumptionMoneyPerPage());
     }
 
     public function testGetCountDepartments()
@@ -51,7 +51,7 @@ class CompanyTest extends TestCase
 
     public function testGetConsumptionMoneyPerPage()
     {
-        $this->assertEquals(812.5, $this->company->getConsumptionMoneyPerPage());
+        $this->assertEquals(162.5, $this->company->getConsumptionMoneyPerPage());
     }
 
     public function testGetCoffeeExpenses()

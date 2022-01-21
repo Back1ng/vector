@@ -37,6 +37,11 @@ class Employee
         $this->job      = new $job;
     }
 
+    public function __clone()
+    {
+        $this->job = clone $this->job;
+    }
+
     /**
      * Расчет зарплаты на основе ранга
      *
