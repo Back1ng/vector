@@ -6,6 +6,7 @@ use App\Department;
 use App\Employee;
 use App\Exceptions\LeaderNotFoundException;
 use App\Jobs\Analyst;
+use App\Jobs\Engineer;
 use App\Jobs\Manager;
 use App\Jobs\Marketer;
 use PHPUnit\Framework\TestCase;
@@ -258,5 +259,18 @@ class DepartmentTest extends TestCase
         } else {
             $this->department->addEmployee(new Employee(new Manager(), 2), 10);
         }
+    }
+
+    public function testConsumptionMoneyPerPage()
+    {
+
+        $ad = (new Department('рекламы'))
+            ->addEmployee(new Employee(new Marketer(), 1), 15)
+            ->addEmployee(new Employee(new Marketer(), 2), 10)
+            ->addEmployee(new Employee(new Manager(), 1), 8)
+            ->addEmployee(new Employee(new Engineer(), 1), 2)
+            ->addEmployee(new Employee(new Marketer(), 3, true));
+
+        $this->assertEquals(1001.35, $ad->getConsumptionMoneyPerPage());
     }
 }

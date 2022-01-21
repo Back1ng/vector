@@ -118,7 +118,11 @@ class Department
         $money = 0;
 
         foreach ($this->employees as $employee) {
-            $money += round($employee->getRate() / $employee->getReport(), 2);
+            if ($employee->getReport() === 0) {
+                $money += $employee->getRate();
+            } else {
+                $money += round($employee->getRate() / $employee->getReport(), 2);
+            }
         }
 
         return $money;

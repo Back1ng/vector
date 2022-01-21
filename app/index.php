@@ -13,12 +13,14 @@ require "../vendor/autoload.php";
 
 function padRight($string, int $length): string
 {
-    return $string . str_repeat(' ', $length - mb_strlen(strval($string)));
+    $times = $length - mb_strlen(strval($string));
+    return $string . str_repeat(' ', $times >= 0 ? $times : 0);
 }
 
 function padLeft($string, int $length): string
 {
-    return str_repeat(' ', $length - mb_strlen(strval($string))) . $string;
+    $times = $length - mb_strlen(strval($string));
+    return str_repeat(' ', $times >= 0 ? $times : 0) . $string;
 }
 
 function write($vector) {
