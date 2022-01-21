@@ -79,9 +79,6 @@ $vector->addDepartment($purchasing);
 $vector->addDepartment($sells);
 $vector->addDepartment($ad);
 $vector->addDepartment($logistics);
-
-$vector = serialize($vector);
-
 echo padLeft("Департамент", 11)
     .padLeft("сотр.", 11)
     .padLeft("тугр.", 11)
@@ -91,19 +88,19 @@ echo padLeft("Департамент", 11)
 
 echo '---------------------------------------------------------------------' . PHP_EOL;
 echo "=== DEFAULT ===" . PHP_EOL;
-write(unserialize($vector));
+write($vector);
 
 echo "=== ANTI-CRISIS FIRST ===" . PHP_EOL;
-$antiCrisis = new AntiCrisisCommittee(unserialize($vector));
+$antiCrisis = new AntiCrisisCommittee(clone $vector);
 $antiCrisis->setAntiCrisisMeasuresFirst();
 write($antiCrisis->getCompany());
 
 echo "=== ANTI-CRISIS SECOND ===" . PHP_EOL;
-$antiCrisis = new AntiCrisisCommittee(unserialize($vector));
+$antiCrisis = new AntiCrisisCommittee(clone $vector);
 $antiCrisis->setAntiCrisisMeasuresSecond();
 write($antiCrisis->getCompany());
 
 echo "=== ANTI-CRISIS THIRD ===" . PHP_EOL;
-$antiCrisis = new AntiCrisisCommittee(unserialize($vector));
+$antiCrisis = new AntiCrisisCommittee(clone $vector);
 $antiCrisis->setAntiCrisisMeasuresThird();
 write($antiCrisis->getCompany());

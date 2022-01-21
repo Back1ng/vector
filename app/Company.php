@@ -13,6 +13,13 @@ class Company
      */
     private array $departments = [];
 
+    public function __clone()
+    {
+        foreach ($this->departments as $key => $department) {
+            $this->departments[$key] = clone $department;
+        }
+    }
+
     /**
      * @param Department $department
      * @return $this

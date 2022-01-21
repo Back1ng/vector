@@ -29,6 +29,13 @@ class Department
         $this->name = $name;
     }
 
+    public function __clone()
+    {
+        foreach ($this->employees as $key => $employee) {
+            $this->employees[$key] = clone $employee;
+        }
+    }
+
     /**
      * @param Employee $employee
      * @param int $count
