@@ -27,38 +27,39 @@ class AntiCrisisCommittee
         return $this->company;
     }
 
-    public function setAntiCrisisMeasuresFirst()
+    public function setAntiCrisisMeasuresFirst(): bool
     {
+        $iterations = 0;
+
         foreach ($this->company->getDepartments() as $department) {
             $engineers = $department->getEmployeesByJob(new Engineer());
 
-            usort($engineers, function($a, $b) {
-                if ($a->isLeader() && $b->isLeader()) return 0;
-                if ($a->isLeader()) return 1;
-                return $a->getRank() <=> $b->getRank();
-            });
+            $engineers = $this->getSortedEmployees($engineers);
 
-            $dismiss = array_slice($engineers, 0, intval(ceil(count($engineers) * 0.4)));
+            $dismiss = array_slice($engineers, 0, intval(count($engineers) * 0.4));
 
             array_walk($dismiss, function ($employee) use ($department) {
                 $department->dismissEmployee($employee);
             });
+            $iterations++;
         }
+
+        return $iterations === $this->company->getCountDepartments();
     }
 
-    public function setAntiCrisisMeasuresSecond()
+    public function setAntiCrisisMeasuresSecond(): bool
     {
+        $iterations = 0;
+
         foreach ($this->company->getDepartments() as $department) {
-            $analytics = array_map(function ($employee) {
-                $employee->getJob()->setRate(1100)->setCoffee(75);
-                return $employee;
-            }, $department->getEmployeesByJob(new Analyst()));
-
-            if($analytics === []) continue;
-
+            $analytics = $this->getAnalyticsWithChangedExpenses($department);
+            $iterations++;
+            if ([] === $analytics) {
+                continue;
+            }
             $leader = $department->getLeader();
 
-            if (!($leader instanceof Analyst)) {
+            if (! ($leader->getJob() instanceof Analyst)) {
                 usort($analytics, function ($a, $b) {
                     return $a->getRank() <=> $b->getRank();
                 });
@@ -66,21 +67,64 @@ class AntiCrisisCommittee
                 $leader->removeLeadership();
             }
         }
+
+        return $iterations === $this->company->getCountDepartments();
     }
 
     public function setAntiCrisisMeasuresThird()
     {
+        $iteration = 0;
+
         foreach ($this->company->getDepartments() as $department) {
             $employeesFirstRank  = $department->getEmployeesByJobAndRank(new Manager(), 1);
             $employeesSecondRank = $department->getEmployeesByJobAndRank(new Manager(), 2);
 
-            array_map(function (Employee $employee) {
-                $employee->setRank($employee->getRank() + 1);
-                return $employee;
-            }, array_merge(
-                array_slice($employeesFirstRank,  0, intval(ceil(count($employeesFirstRank) * 0.5))),
-                array_slice($employeesSecondRank, 0, intval(ceil(count($employeesSecondRank) * 0.5)))
-            ));
+            for ($i = 0; $i < intval(ceil(count($employeesSecondRank) * 0.5)); $i++) {
+                if ($employeesSecondRank[$i]->getRank() === 2) {
+                    $employeesSecondRank[$i]->setRank(3);
+                }
+            }
+
+            for ($i = 0; $i < intval(ceil(count($employeesFirstRank) * 0.5)); $i++) {
+                if ($employeesFirstRank[$i]->getRank() === 1) {
+                    $employeesFirstRank[$i]->setRank(2);
+                }
+            }
+
+            $iteration++;
         }
+
+        return $iteration === $this->company->getCountDepartments();
+    }
+
+    /**
+     * @param $engineers
+     * @return mixed
+     */
+    public function getSortedEmployees($engineers)
+    {
+        usort($engineers, function ($a, $b) {
+            if ($a->isLeader() && $b->isLeader()) {
+                return 0;
+            }
+            if ($a->isLeader()) {
+                return 1;
+            }
+            return $a->getRank() <=> $b->getRank();
+        });
+
+        return $engineers;
+    }
+
+    /**
+     * @param mixed $department
+     * @return array
+     */
+    public function getAnalyticsWithChangedExpenses(Department $department): array
+    {
+        return array_map(function ($employee) use ($department) {
+            $employee->getJob()->setRate(1100)->setCoffee(75);
+            return $employee;
+        }, $department->getEmployeesByJob(new Analyst()));
     }
 }

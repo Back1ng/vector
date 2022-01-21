@@ -1,7 +1,11 @@
 <?php declare(strict_types=1);
 
+namespace unit;
+
 use App\Employee;
+use App\Jobs\Analyst;
 use App\Jobs\Manager;
+use App\Jobs\Marketer;
 use PHPUnit\Framework\TestCase;
 
 class EmployeeTest extends TestCase
@@ -41,6 +45,13 @@ class EmployeeTest extends TestCase
         $this->assertFalse($employee->isLeader());
     }
 
+    public function testRemoveLeadershipReturnEmployee()
+    {
+        $employee = new Employee(new Manager(), 1);
+
+        $this->assertInstanceOf(Employee::class, $employee->removeLeadership());
+    }
+
     public function testDefineAsLeader()
     {
         $employee = new Employee(new Manager(), 1);
@@ -50,6 +61,28 @@ class EmployeeTest extends TestCase
         $employee->defineAsLeader();
 
         $this->assertTrue($employee->isLeader());
+    }
+
+    public function testGetRateIfRankIsIncorrect()
+    {
+        $employee = new Employee(new Manager(), 0);
+
+        $this->assertEquals(0, $employee->getRate());
+    }
+
+    public function testSetJob()
+    {
+        $employee = new Employee(new Manager(), 2);
+
+        $employee->setJob(new Analyst(), 3, true);
+        $this->assertEquals('App\Jobs\Analyst', get_class($employee->getJob()));
+        $this->assertEquals(3, $employee->getRank());
+        $this->assertEquals(true, $employee->isLeader());
+
+        $employee->setJob(new Marketer(), 1, false);
+        $this->assertEquals('App\Jobs\Marketer', get_class($employee->getJob()));
+        $this->assertEquals(1, $employee->getRank());
+        $this->assertEquals(false, $employee->isLeader());
     }
 
     public function employeeRateTestProvider(): array

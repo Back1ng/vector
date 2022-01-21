@@ -5,7 +5,6 @@ namespace App;
 
 use App\Exceptions\LeaderNotFoundException;
 
-
 /**
  * Управление сотрудниками в отделе
  */
@@ -75,7 +74,7 @@ class Department
             $money += $employee->getRate();
         }
 
-        return round($money, 2);
+        return $money;
     }
 
     /**
@@ -114,6 +113,17 @@ class Department
         return $this->name;
     }
 
+    public function getConsumptionMoneyPerPage()
+    {
+        $money = 0;
+
+        foreach ($this->employees as $employee) {
+            $money += round($employee->getRate() / $employee->getReport(), 2);
+        }
+
+        return $money;
+    }
+
     /**
      * @return float
      */
@@ -136,7 +146,7 @@ class Department
             unset($this->employees[$id]);
         }
 
-        $this->resetKeysEmployeers();
+        $this->resetKeysEmployees();
 
         return $this;
     }
@@ -197,8 +207,8 @@ class Department
     {
         $data = [];
 
-        foreach ($this->employees as $id => $employee) {
-            if ($employee->getJob() instanceof $job && $employee->getRank() === $rank) {
+        foreach ($this->getEmployeesByJob($job) as $employee) {
+            if ($employee->getRank() === $rank) {
                 $data[] = $employee;
             }
         }
@@ -206,7 +216,7 @@ class Department
         return $data;
     }
 
-    private function resetKeysEmployeers()
+    private function resetKeysEmployees()
     {
         $this->employees = array_values($this->getEmployees());
     }

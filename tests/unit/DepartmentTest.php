@@ -1,11 +1,13 @@
 <?php declare(strict_types=1);
 
+namespace unit;
+
 use App\Department;
 use App\Employee;
+use App\Exceptions\LeaderNotFoundException;
 use App\Jobs\Analyst;
 use App\Jobs\Manager;
 use App\Jobs\Marketer;
-use App\Exceptions\LeaderNotFoundException;
 use PHPUnit\Framework\TestCase;
 
 class DepartmentTest extends TestCase
@@ -74,9 +76,14 @@ class DepartmentTest extends TestCase
         $this->department->addEmployee($employee, 2);
 
         $this->department->getEmployees()[0]->setRank(1);
+        $this->department->getEmployees()[0]->getJob()->setReport(100);
 
         $this->assertEquals(1, $this->department->getEmployees()[0]->getRank());
+        $this->assertEquals(100, $this->department->getEmployees()[0]->getReport());
+
         $this->assertEquals(2, $this->department->getEmployees()[1]->getRank());
+        $this->assertEquals(5, $this->department->getEmployees()[1]->getReport());
+
     }
 
     public function testGetEmployeesWhenDepartmentHaveNotEmployees()
@@ -203,11 +210,44 @@ class DepartmentTest extends TestCase
         $this->assertEquals(0, count($this->department->getEmployeesByJob(new Analyst())));
     }
 
+    public function testGetEmployeesByJobWithTwoEmployee()
+    {
+        $employee = new Employee(new Manager(), 2);
+
+        $this->department->addEmployee($employee, 2);
+
+        $this->assertEquals(2, count($this->department->getEmployeesByJob(new Manager())));
+    }
+
     public function testGetLeaderThrowAnException()
     {
         $this->expectException(LeaderNotFoundException::class);
 
         $this->department->getLeader();
+    }
+
+    public function testGetLeaderReturnLeader()
+    {
+        $employee = new Employee(new Manager(), 2, true);
+
+        $this->department->addEmployee($employee);
+
+        $this->assertTrue($this->department->getLeader()->isLeader());
+    }
+
+    public function testGetEmployeesByJobAndRank()
+    {
+        $this->department->addEmployee(new Employee(new Marketer(), 2), 5);
+        $this->department->addEmployee(new Employee(new Marketer(), 1), 5);
+
+        $this->assertEquals(5, count($this->department->getEmployeesByJobAndRank(new Marketer(), 2)));
+    }
+
+    public function testGetLeaders()
+    {
+        $this->addEmployees(true);
+
+        $this->assertEquals(11, count($this->department->getLeaders()));
     }
 
     private function addEmployees(bool $withLeadership = false)

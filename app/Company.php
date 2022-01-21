@@ -135,7 +135,7 @@ class Company
         $moneyConsumption = 0;
 
         foreach ($this->departments as $department) {
-            $moneyConsumption += $department->getAverageConsumptionMoneyPerPage();
+            $moneyConsumption += $department->getConsumptionMoneyPerPage();
         }
 
         return $moneyConsumption;
