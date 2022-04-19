@@ -8,6 +8,7 @@ use App\Department;
 use App\Employee;
 use App\Jobs\Analyst;
 use App\Jobs\Manager;
+use App\ValueObjects\Rank;
 use PHPUnit\Framework\TestCase;
 
 class CompanyTest extends TestCase
@@ -19,10 +20,10 @@ class CompanyTest extends TestCase
         $this->company = new Company();
 
         $department = new Department('test');
-        $department->addEmployee(new Employee(new Manager(), 1), 5);
+        $department->addEmployee(new Employee(new Manager(), new Rank(1)), 5);
 
         $department2 = new Department('test2');
-        $department2->addEmployee(new Employee(new Analyst(), 1), 5);
+        $department2->addEmployee(new Employee(new Analyst(), new Rank(1)), 5);
 
         $this->company->addDepartment($department);
         $this->company->addDepartment($department2);

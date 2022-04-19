@@ -4,6 +4,7 @@
 namespace App;
 
 use App\Exceptions\LeaderNotFoundException;
+use App\ValueObjects\Rank;
 
 /**
  * Управление сотрудниками в отделе
@@ -120,7 +121,7 @@ class Department
         return $this->name;
     }
 
-    public function getConsumptionMoneyPerPage()
+    public function getConsumptionMoneyPerPage(): float
     {
         if ($this->getReports() === 0) {
             return $this->getMoneyExpenses();
@@ -205,15 +206,15 @@ class Department
 
     /**
      * @param Job $job
-     * @param int $rank
+     * @param Rank $rank
      * @return array
      */
-    public function getEmployeesByJobAndRank(Job $job, int $rank) : array
+    public function getEmployeesByJobAndRank(Job $job, Rank $rank) : array
     {
         $data = [];
 
         foreach ($this->getEmployeesByJob($job) as $employee) {
-            if ($employee->getRank() === $rank) {
+            if ($employee->getRank()->getValue() === $rank->getValue()) {
                 $data[] = $employee;
             }
         }

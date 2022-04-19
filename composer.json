@@ -5,6 +5,7 @@
         }
     },
     "require": {
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.5",
+        "ramsey/collection": "^1.2"
     }
 }

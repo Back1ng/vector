@@ -3,18 +3,17 @@
 
 namespace App;
 
+use App\ValueObjects\Rank;
+
 /**
  * Управление сотрудниками
  */
 class Employee
 {
     /**
-     * Ранг сотрудника
-     * (от 1 до 3)
-     *
-     * @var int
+     * @var Rank
      */
-    protected int $rank;
+    protected Rank $rank;
 
     /**
      * Руководитель отдела
@@ -30,7 +29,7 @@ class Employee
      */
     protected Job $job;
 
-    public function __construct(Job $job, int $rank, bool $isLeader = false)
+    public function __construct(Job $job, Rank $rank, bool $isLeader = false)
     {
         $this->rank     = $rank;
         $this->isLeader = $isLeader;
@@ -48,11 +47,11 @@ class Employee
      * @param int $rank
      * @return float|int
      */
-    private function calculateByRank(int $rank)
+    private function calculateByRank(Rank $rank)
     {
         $rate = $this->job->getRate();
 
-        switch ($rank) {
+        switch ($rank->getValue()) {
             case 1:
                 return $rate;
             case 2:
@@ -71,8 +70,7 @@ class Employee
      */
     public function getRate()
     {
-        $rank = $this->getRank();
-        $rate = $this->calculateByRank($rank);
+        $rate = $this->calculateByRank($this->getRank());
 
         if ($this->isLeader()) {
             $rate *= 1.5;
@@ -110,7 +108,7 @@ class Employee
     /**
      * @return int
      */
-    public function getRank() : int
+    public function getRank() : Rank
     {
         return $this->rank;
     }
@@ -119,7 +117,7 @@ class Employee
      * @param int $rank
      * @return $this
      */
-    public function setRank(int $rank) : self
+    public function setRank(Rank $rank) : self
     {
         $this->rank = $rank;
 
@@ -163,11 +161,11 @@ class Employee
      * Устанавливает новую работу.
      *
      * @param Job $job
-     * @param int $rank
+     * @param Rank $rank
      * @param bool $isLeader
      * @return $this
      */
-    public function setJob(Job $job, int $rank, bool $isLeader = false) : self
+    public function setJob(Job $job, Rank $rank, bool $isLeader = false) : self
     {
         $this->job = new $job;
         $this->rank = $rank;

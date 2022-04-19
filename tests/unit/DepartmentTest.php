@@ -9,6 +9,7 @@ use App\Jobs\Analyst;
 use App\Jobs\Engineer;
 use App\Jobs\Manager;
 use App\Jobs\Marketer;
+use App\ValueObjects\Rank;
 use PHPUnit\Framework\TestCase;
 
 class DepartmentTest extends TestCase
@@ -22,7 +23,7 @@ class DepartmentTest extends TestCase
 
     public function testAddOneEmployee()
     {
-        $employee = new Employee(new Analyst(), 2);
+        $employee = new Employee(new Analyst(), new Rank(2));
 
         $this->department->addEmployee($employee);
 
@@ -31,7 +32,7 @@ class DepartmentTest extends TestCase
 
     public function testAddTwoEmployeesByArgument()
     {
-        $employee = new Employee(new Analyst(), 2);
+        $employee = new Employee(new Analyst(), new Rank(2));
 
         $this->department->addEmployee($employee, 2);
 
@@ -40,22 +41,22 @@ class DepartmentTest extends TestCase
 
     public function testAddTwoEmployeesByDoubleCalls()
     {
-        $firstEmployee = new Employee(new Manager(), 1);
-        $secondEmployee = new Employee(new Analyst(), 3);
+        $firstEmployee = new Employee(new Manager(), new Rank(1));
+        $secondEmployee = new Employee(new Analyst(), new Rank(3));
 
         $this->department->addEmployee($firstEmployee);
         $this->department->addEmployee($secondEmployee);
 
         $this->assertEquals(2, $this->department->getCountEmployee());
 
-        $this->assertEquals(1, $this->department->getEmployees()[0]->getRank());
-        $this->assertEquals(3, $this->department->getEmployees()[1]->getRank());
+        $this->assertEquals(1, $this->department->getEmployees()[0]->getRank()->getValue());
+        $this->assertEquals(3, $this->department->getEmployees()[1]->getRank()->getValue());
     }
 
     public function testAddTwoEmployeesByDoubleSelfCalls()
     {
-        $firstEmployee = new Employee(new Manager(), 1);
-        $secondEmployee = new Employee(new Analyst(), 3);
+        $firstEmployee = new Employee(new Manager(), new Rank(1));
+        $secondEmployee = new Employee(new Analyst(), new Rank(3));
 
         $this->department
             ->addEmployee($firstEmployee)
@@ -63,8 +64,8 @@ class DepartmentTest extends TestCase
 
         $this->assertEquals(2, $this->department->getCountEmployee());
 
-        $this->assertEquals(1, $this->department->getEmployees()[0]->getRank());
-        $this->assertEquals(3, $this->department->getEmployees()[1]->getRank());
+        $this->assertEquals(1, $this->department->getEmployees()[0]->getRank()->getValue());
+        $this->assertEquals(3, $this->department->getEmployees()[1]->getRank()->getValue());
     }
 
     /**
@@ -72,17 +73,17 @@ class DepartmentTest extends TestCase
      */
     public function testThatAddEmployeeAddsNotLinkedEmployees()
     {
-        $employee = new Employee(new Analyst(), 2);
+        $employee = new Employee(new Analyst(), new Rank(2));
 
         $this->department->addEmployee($employee, 2);
 
-        $this->department->getEmployees()[0]->setRank(1);
+        $this->department->getEmployees()[0]->setRank(new Rank(1));
         $this->department->getEmployees()[0]->getJob()->setReport(100);
 
-        $this->assertEquals(1, $this->department->getEmployees()[0]->getRank());
+        $this->assertEquals(1, $this->department->getEmployees()[0]->getRank()->getValue());
         $this->assertEquals(100, $this->department->getEmployees()[0]->getReport());
 
-        $this->assertEquals(2, $this->department->getEmployees()[1]->getRank());
+        $this->assertEquals(2, $this->department->getEmployees()[1]->getRank()->getValue());
         $this->assertEquals(5, $this->department->getEmployees()[1]->getReport());
 
     }
@@ -94,9 +95,9 @@ class DepartmentTest extends TestCase
 
     public function testGetEmployees()
     {
-        $this->department->addEmployee(new Employee(new Manager(), 1), 10);
+        $this->department->addEmployee(new Employee(new Manager(), new Rank(1)), 10);
 
-        $this->assertEquals(1, $this->department->getEmployees()[3]->getRank());
+        $this->assertEquals(1, $this->department->getEmployees()[3]->getRank()->getValue());
     }
 
     public function testGetCountEmployeesWhenDepartmentHaveNotEmployees()
@@ -106,7 +107,7 @@ class DepartmentTest extends TestCase
 
     public function testGetCountEmployees()
     {
-        $this->department->addEmployee(new Employee(new Manager(), 1), 10);
+        $this->department->addEmployee(new Employee(new Manager(), new Rank(1)), 10);
 
         $this->assertEquals(10, $this->department->getCountEmployee());
     }
@@ -173,7 +174,7 @@ class DepartmentTest extends TestCase
 
     public function testDismissEmployeeCanDismissEmployee()
     {
-        $employee = new Employee(new Manager(), 2);
+        $employee = new Employee(new Manager(), new Rank(2));
 
         $this->department->addEmployee($employee);
 
@@ -186,8 +187,8 @@ class DepartmentTest extends TestCase
 
     public function testDismissEmployeeRemoveOneOfTwoEmployees()
     {
-        $firstEmployee = new Employee(new Manager(), 2);
-        $secondEmployee = new Employee(new Manager(), 3);
+        $firstEmployee = new Employee(new Manager(), new Rank(2));
+        $secondEmployee = new Employee(new Manager(), new Rank(3));
 
         $this->department->addEmployee($firstEmployee);
         $this->department->addEmployee($secondEmployee);
@@ -197,12 +198,12 @@ class DepartmentTest extends TestCase
         $this->department->dismissEmployee($firstEmployee);
 
         $this->assertEquals(1, $this->department->getCountEmployee());
-        $this->assertEquals(3, $this->department->getEmployees()[0]->getRank());
+        $this->assertEquals(3, $this->department->getEmployees()[0]->getRank()->getValue());
     }
 
     public function testGetEmployeesByJobWithOneEmployee()
     {
-        $employee = new Employee(new Manager(), 2);
+        $employee = new Employee(new Manager(), new Rank(2));
 
         $this->department->addEmployee($employee);
 
@@ -213,7 +214,7 @@ class DepartmentTest extends TestCase
 
     public function testGetEmployeesByJobWithTwoEmployee()
     {
-        $employee = new Employee(new Manager(), 2);
+        $employee = new Employee(new Manager(), new Rank(2));
 
         $this->department->addEmployee($employee, 2);
 
@@ -229,7 +230,7 @@ class DepartmentTest extends TestCase
 
     public function testGetLeaderReturnLeader()
     {
-        $employee = new Employee(new Manager(), 2, true);
+        $employee = new Employee(new Manager(), new Rank(2), true);
 
         $this->department->addEmployee($employee);
 
@@ -238,10 +239,10 @@ class DepartmentTest extends TestCase
 
     public function testGetEmployeesByJobAndRank()
     {
-        $this->department->addEmployee(new Employee(new Marketer(), 2), 5);
-        $this->department->addEmployee(new Employee(new Marketer(), 1), 5);
+        $this->department->addEmployee(new Employee(new Marketer(), new Rank(2)), 5);
+        $this->department->addEmployee(new Employee(new Marketer(), new Rank(1)), 5);
 
-        $this->assertEquals(5, count($this->department->getEmployeesByJobAndRank(new Marketer(), 2)));
+        $this->assertEquals(5, count($this->department->getEmployeesByJobAndRank(new Marketer(), new Rank(2))));
     }
 
     public function testGetLeaders()
@@ -254,10 +255,10 @@ class DepartmentTest extends TestCase
     private function addEmployees(bool $withLeadership = false)
     {
         if ($withLeadership) {
-            $this->department->addEmployee(new Employee(new Marketer(), 3, true), 11);
-            $this->department->addEmployee(new Employee(new Marketer(), 3), 2);
+            $this->department->addEmployee(new Employee(new Marketer(), new Rank(3), true), 11);
+            $this->department->addEmployee(new Employee(new Marketer(), new Rank(3)), 2);
         } else {
-            $this->department->addEmployee(new Employee(new Manager(), 2), 10);
+            $this->department->addEmployee(new Employee(new Manager(), new Rank(2)), 10);
         }
     }
 
@@ -265,11 +266,11 @@ class DepartmentTest extends TestCase
     {
 
         $ad = (new Department('рекламы'))
-            ->addEmployee(new Employee(new Marketer(), 1), 15)
-            ->addEmployee(new Employee(new Marketer(), 2), 10)
-            ->addEmployee(new Employee(new Manager(), 1), 8)
-            ->addEmployee(new Employee(new Engineer(), 1), 2)
-            ->addEmployee(new Employee(new Marketer(), 3, true));
+            ->addEmployee(new Employee(new Marketer(), new Rank(1)), 15)
+            ->addEmployee(new Employee(new Marketer(), new Rank(2)), 10)
+            ->addEmployee(new Employee(new Manager(), new Rank(1)), 8)
+            ->addEmployee(new Employee(new Engineer(), new Rank(1)), 2)
+            ->addEmployee(new Employee(new Marketer(), new Rank(3), true));
 
         $this->assertEquals(2.99, $ad->getConsumptionMoneyPerPage());
     }

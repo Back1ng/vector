@@ -7,10 +7,14 @@ namespace App;
 use App\Jobs\Analyst;
 use App\Jobs\Engineer;
 use App\Jobs\Manager;
+use App\ValueObjects\Rank;
 
 class AntiCrisisCommittee
 {
     private Company $company;
+    private const PERCENT_DISMISS_EMPLOYEE = 0.4;
+    private const PERCENT_RANK_UP_EMPLOYEE_OF_FIRST_RANK = 0.5;
+    private const PERCENT_RANK_UP_EMPLOYEE_OF_SECOND_RANK = 0.5;
 
     public function __construct(Company $company)
     {
@@ -22,7 +26,7 @@ class AntiCrisisCommittee
      *
      * @return Company
      */
-    public function getCompany() : Company
+    public function getCompany(): Company
     {
         return $this->company;
     }
@@ -36,11 +40,10 @@ class AntiCrisisCommittee
 
             $engineers = $this->getSortedEmployees($engineers);
 
-            $dismiss = array_slice($engineers, 0, intval(count($engineers) * 0.4));
+            $dismiss = array_slice($engineers, 0, intval(count($engineers) * self::PERCENT_DISMISS_EMPLOYEE));
 
-            array_walk($dismiss, function ($employee) use ($department) {
-                $department->dismissEmployee($employee);
-            });
+            array_walk($dismiss, fn(Employee $employee) => $department->dismissEmployee($employee));
+
             $iterations++;
         }
 
@@ -59,11 +62,11 @@ class AntiCrisisCommittee
             }
             $leader = $department->getLeader();
 
-            if (! ($leader->getJob() instanceof Analyst)) {
-                usort($analytics, function ($a, $b) {
-                    return $a->getRank() <=> $b->getRank();
-                });
+            if (!$this->isAnalyst($leader)) {
+                usort($analytics, fn($a, $b) => $a->getRank() <=> $b->getRank());
+
                 array_pop($analytics)->defineAsLeader();
+
                 $leader->removeLeadership();
             }
         }
@@ -76,18 +79,18 @@ class AntiCrisisCommittee
         $iteration = 0;
 
         foreach ($this->company->getDepartments() as $department) {
-            $employeesFirstRank  = $department->getEmployeesByJobAndRank(new Manager(), 1);
-            $employeesSecondRank = $department->getEmployeesByJobAndRank(new Manager(), 2);
+            $employeesFirstRank = $department->getEmployeesByJobAndRank(new Manager(), new Rank(1));
+            $employeesSecondRank = $department->getEmployeesByJobAndRank(new Manager(), new Rank(2));
 
-            for ($i = 0; $i < intval(ceil(count($employeesSecondRank) * 0.5)); $i++) {
-                if ($employeesSecondRank[$i]->getRank() === 2) {
-                    $employeesSecondRank[$i]->setRank(3);
+            for ($i = 0; $i < intval(ceil(count($employeesSecondRank) * self::PERCENT_RANK_UP_EMPLOYEE_OF_FIRST_RANK)); $i++) {
+                if ($employeesSecondRank[$i]->getRank() == new Rank(2)) {
+                    $employeesSecondRank[$i]->setRank(new Rank(3));
                 }
             }
 
-            for ($i = 0; $i < intval(ceil(count($employeesFirstRank) * 0.5)); $i++) {
-                if ($employeesFirstRank[$i]->getRank() === 1) {
-                    $employeesFirstRank[$i]->setRank(2);
+            for ($i = 0; $i < intval(ceil(count($employeesFirstRank) * self::PERCENT_RANK_UP_EMPLOYEE_OF_SECOND_RANK)); $i++) {
+                if ($employeesFirstRank[$i]->getRank() == new Rank(1)) {
+                    $employeesFirstRank[$i]->setRank(new Rank(2));
                 }
             }
 
@@ -126,5 +129,10 @@ class AntiCrisisCommittee
             $employee->getJob()->setRate(1100)->setCoffee(75);
             return $employee;
         }, $department->getEmployeesByJob(new Analyst()));
+    }
+
+    private function isAnalyst(Employee $employee): bool
+    {
+        return $employee->getJob() instanceof Analyst;
     }
 }
