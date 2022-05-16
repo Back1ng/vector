@@ -58,8 +58,6 @@ class Employee
                 return $rate * 1.25;
             case 3:
                 return $rate * 1.5;
-            default:
-                return 0;
         }
     }
 

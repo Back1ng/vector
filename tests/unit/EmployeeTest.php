@@ -81,7 +81,7 @@ class EmployeeTest extends TestCase
         $this->assertEquals(3, $employee->getRank()->getValue());
         $this->assertEquals(true, $employee->isLeader());
 
-        $employee->setJob(new Marketer(), new Rank(1), false);
+        $employee->setJob(new Marketer(), new Rank(1));
         $this->assertEquals('App\Jobs\Marketer', get_class($employee->getJob()));
         $this->assertEquals(1, $employee->getRank()->getValue());
         $this->assertEquals(false, $employee->isLeader());
