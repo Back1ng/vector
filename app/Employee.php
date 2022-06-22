@@ -3,37 +3,20 @@
 
 namespace App;
 
-use App\ValueObjects\Rank;
+use App\ValueObjects\Ranks\Rank;
 
 /**
  * Управление сотрудниками
  */
 class Employee
 {
-    /**
-     * @var Rank
-     */
-    protected Rank $rank;
-
-    /**
-     * Руководитель отдела
-     *
-     * @var bool
-     */
-    protected bool $isLeader = false;
-
-    /**
-     * Профессия сотрудника
-     *
-     * @var Job
-     */
-    protected Job $job;
-
-    public function __construct(Job $job, Rank $rank, bool $isLeader = false)
+    public function __construct(
+        protected Job  $job,
+        protected Rank $rank,
+        protected bool $isLeader = false
+    )
     {
-        $this->rank     = $rank;
-        $this->isLeader = $isLeader;
-        $this->job      = new $job;
+        $this->job = new $job;
     }
 
     public function __clone()
@@ -44,21 +27,14 @@ class Employee
     /**
      * Расчет зарплаты на основе ранга
      *
-     * @param int $rank
+     * @param Rank $rank
      * @return float|int
      */
     private function calculateByRank(Rank $rank)
     {
         $rate = $this->job->getRate();
 
-        switch ($rank->getValue()) {
-            case 1:
-                return $rate;
-            case 2:
-                return $rate * 1.25;
-            case 3:
-                return $rate * 1.5;
-        }
+        return $rate * $rank->getMultiplier();
     }
 
     /**
@@ -106,7 +82,7 @@ class Employee
     /**
      * @return int
      */
-    public function getRank() : Rank
+    public function getRank(): Rank
     {
         return $this->rank;
     }
@@ -115,7 +91,7 @@ class Employee
      * @param int $rank
      * @return $this
      */
-    public function setRank(Rank $rank) : self
+    public function setRank(Rank $rank): self
     {
         $this->rank = $rank;
 
@@ -125,7 +101,7 @@ class Employee
     /**
      * @return bool
      */
-    public function isLeader() : bool
+    public function isLeader(): bool
     {
         return $this->isLeader;
     }
@@ -133,7 +109,7 @@ class Employee
     /**
      * @return Job
      */
-    public function getJob() : Job
+    public function getJob(): Job
     {
         return $this->job;
     }
@@ -148,7 +124,7 @@ class Employee
     /**
      * @return $this
      */
-    public function defineAsLeader() : self
+    public function defineAsLeader(): self
     {
         $this->isLeader = true;
 
@@ -163,7 +139,7 @@ class Employee
      * @param bool $isLeader
      * @return $this
      */
-    public function setJob(Job $job, Rank $rank, bool $isLeader = false) : self
+    public function setJob(Job $job, Rank $rank, bool $isLeader = false): self
     {
         $this->job = new $job;
         $this->rank = $rank;

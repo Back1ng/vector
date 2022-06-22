@@ -10,7 +10,9 @@ use App\Jobs\Analyst;
 use App\Jobs\Engineer;
 use App\Jobs\Manager;
 use App\Jobs\Marketer;
-use App\ValueObjects\Rank;
+use App\ValueObjects\Ranks\MiddleRank;
+use App\ValueObjects\Ranks\NewbeeRank;
+use App\ValueObjects\Ranks\SeniorRank;
 use PHPUnit\Framework\TestCase;
 
 class AntiCrisisCommitteeTest extends TestCase
@@ -46,8 +48,8 @@ class AntiCrisisCommitteeTest extends TestCase
     {
         $marketing = new Department('маркетинг');
 
-        $marketing->addEmployee(new Employee(new Engineer(), new Rank(2), true), 2);
-        $marketing->addEmployee(new Employee(new Engineer(), new Rank(2)), 2);
+        $marketing->addEmployee(new Employee(new Engineer(), new MiddleRank(), true), 2);
+        $marketing->addEmployee(new Employee(new Engineer(), new MiddleRank()), 2);
 
         $company = (new Company())->addDepartment($marketing);
         $comitte = new AntiCrisisCommittee($company);
@@ -62,15 +64,14 @@ class AntiCrisisCommitteeTest extends TestCase
     {
         $marketing = new Department('маркетинг');
 
-        $marketing->addEmployee(new Employee(new Engineer(), new Rank(1)));
-        $marketing->addEmployee(new Employee(new Engineer(), new Rank(2)), 33);
-        $marketing->addEmployee(new Employee(new Engineer(), new Rank(3), true));
+        $marketing->addEmployee(new Employee(new Engineer(), new NewbeeRank()));
+        $marketing->addEmployee(new Employee(new Engineer(), new MiddleRank()), 33);
+        $marketing->addEmployee(new Employee(new Engineer(), new SeniorRank(), true));
 
         $company = (new Company())->addDepartment($marketing);
         $comitte = new AntiCrisisCommittee($company);
 
         $this->assertTrue($comitte->setAntiCrisisMeasuresFirst());
-        $this->assertEquals(2, $comitte->getCompany()->getDepartments()[0]->getEmployees()[0]->getRank()->getValue());
         $this->assertEquals(21, $comitte->getCompany()->getDepartments()[0]->getCountEmployee());
     }
 
@@ -88,7 +89,7 @@ class AntiCrisisCommitteeTest extends TestCase
     {
         $marketing = new Department('маркетинг');
 
-        $marketing->addEmployee(new Employee(new Analyst(), new Rank(2)));
+        $marketing->addEmployee(new Employee(new Analyst(), new MiddleRank()));
 
         $company = (new Company())->addDepartment($marketing);
         $comitte = new AntiCrisisCommittee($company);
@@ -102,9 +103,9 @@ class AntiCrisisCommitteeTest extends TestCase
     {
         $marketing = new Department('маркетинг');
 
-        $marketing->addEmployee(new Employee(new Analyst(), new Rank(3)));
-        $marketing->addEmployee(new Employee(new Analyst(), new Rank(2)), 10);
-        $marketing->addEmployee(new Employee(new Marketer(), new Rank(2), true));
+        $marketing->addEmployee(new Employee(new Analyst(), new SeniorRank()));
+        $marketing->addEmployee(new Employee(new Analyst(), new MiddleRank()), 10);
+        $marketing->addEmployee(new Employee(new Marketer(), new MiddleRank(), true));
 
         $company = (new Company())->addDepartment($marketing);
         $comitte = new AntiCrisisCommittee($company);
@@ -112,7 +113,7 @@ class AntiCrisisCommitteeTest extends TestCase
         $this->assertTrue($comitte->setAntiCrisisMeasuresSecond());
 
         $department = $comitte->getCompany()->getDepartments()[0];
-        $this->assertTrue($department->getEmployeesByJobAndRank(new Analyst(), new Rank(3))[0]->isLeader());
+        $this->assertTrue($department->getEmployeesByJobAndRank(new Analyst(), new SeniorRank())[0]->isLeader());
         $this->assertFalse($department->getEmployeesByJob(new Marketer())[0]->isLeader());
     }
 
@@ -120,9 +121,9 @@ class AntiCrisisCommitteeTest extends TestCase
     {
         $marketing = new Department('маркетинг');
 
-        $marketing->addEmployee(new Employee(new Analyst(), new Rank(3), true));
-        $marketing->addEmployee(new Employee(new Analyst(), new Rank(2)), 10);
-        $marketing->addEmployee(new Employee(new Marketer(), new Rank(2)));
+        $marketing->addEmployee(new Employee(new Analyst(), new SeniorRank(), true));
+        $marketing->addEmployee(new Employee(new Analyst(), new MiddleRank()), 10);
+        $marketing->addEmployee(new Employee(new Marketer(), new MiddleRank()));
 
         $company = (new Company())->addDepartment($marketing);
         $comitte = new AntiCrisisCommittee($company);
@@ -130,7 +131,7 @@ class AntiCrisisCommitteeTest extends TestCase
         $this->assertTrue($comitte->setAntiCrisisMeasuresSecond());
 
         $department = $comitte->getCompany()->getDepartments()[0];
-        $this->assertTrue($department->getEmployeesByJobAndRank(new Analyst(), new Rank(3))[0]->isLeader());
+        $this->assertTrue($department->getEmployeesByJobAndRank(new Analyst(), new SeniorRank())[0]->isLeader());
         $this->assertFalse($department->getEmployeesByJob(new Marketer())[0]->isLeader());
     }
 
@@ -138,16 +139,16 @@ class AntiCrisisCommitteeTest extends TestCase
     {
         $marketing = new Department('маркетинг');
 
-        $marketing->addEmployee(new Employee(new Manager(), new Rank(1)), 11);
-        $marketing->addEmployee(new Employee(new Manager(), new Rank(2)), 11);
+        $marketing->addEmployee(new Employee(new Manager(), new NewbeeRank()), 11);
+        $marketing->addEmployee(new Employee(new Manager(), new MiddleRank()), 11);
 
         $company = (new Company())->addDepartment($marketing);
         $comitte = new AntiCrisisCommittee($company);
 
         $this->assertTrue($comitte->setAntiCrisisMeasuresThird());
 
-        $this->assertEquals(6, count($company->getDepartments()[0]->getEmployeesByJobAndRank(new Manager(), new Rank(3))));
-        $this->assertEquals(11, count($company->getDepartments()[0]->getEmployeesByJobAndRank(new Manager(), new Rank(2))));
-        $this->assertEquals(5, count($company->getDepartments()[0]->getEmployeesByJobAndRank(new Manager(), new Rank(1))));
+        $this->assertEquals(6, count($company->getDepartments()[0]->getEmployeesByJobAndRank(new Manager(), new SeniorRank())));
+        $this->assertEquals(11, count($company->getDepartments()[0]->getEmployeesByJobAndRank(new Manager(), new MiddleRank())));
+        $this->assertEquals(5, count($company->getDepartments()[0]->getEmployeesByJobAndRank(new Manager(), new NewbeeRank())));
     }
 }

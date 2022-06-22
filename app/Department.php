@@ -4,7 +4,7 @@
 namespace App;
 
 use App\Exceptions\LeaderNotFoundException;
-use App\ValueObjects\Rank;
+use App\ValueObjects\Ranks\Rank;
 
 /**
  * Управление сотрудниками в отделе

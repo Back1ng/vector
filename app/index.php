@@ -8,7 +8,9 @@ use App\Jobs\Analyst;
 use App\Jobs\Engineer;
 use App\Jobs\Manager;
 use App\Jobs\Marketer;
-use App\ValueObjects\Rank;
+use App\ValueObjects\Ranks\MiddleRank;
+use App\ValueObjects\Ranks\NewbeeRank;
+use App\ValueObjects\Ranks\SeniorRank;
 
 require "../vendor/autoload.php";
 
@@ -50,31 +52,31 @@ function write($vector) {
 $vector = new Company();
 
 $purchasing = (new Department('закупок'))
-    ->addEmployee(new Employee(new Manager(), new Rank(3)), 9)
-    ->addEmployee(new Employee(new Manager(), new Rank(2)), 3)
-    ->addEmployee(new Employee(new Manager(), new Rank(3)), 2)
-    ->addEmployee(new Employee(new Marketer(), new Rank(1)), 2)
-    ->addEmployee(new Employee(new Manager(), new Rank(2), true));
+    ->addEmployee(new Employee(new Manager(), new SeniorRank()), 9)
+    ->addEmployee(new Employee(new Manager(), new MiddleRank()), 3)
+    ->addEmployee(new Employee(new Manager(), new SeniorRank()), 2)
+    ->addEmployee(new Employee(new Marketer(), new NewbeeRank()), 2)
+    ->addEmployee(new Employee(new Manager(), new MiddleRank(), true));
 
 $sells = (new Department('продаж'))
-    ->addEmployee(new Employee(new Manager(), new Rank(1)), 12)
-    ->addEmployee(new Employee(new Marketer(), new Rank(1)), 6)
-    ->addEmployee(new Employee(new Analyst(), new Rank(1)), 3)
-    ->addEmployee(new Employee(new Analyst(), new Rank(2)), 2)
-    ->addEmployee(new Employee(new Manager(), new Rank(2), true));
+    ->addEmployee(new Employee(new Manager(), new NewbeeRank()), 12)
+    ->addEmployee(new Employee(new Marketer(), new NewbeeRank()), 6)
+    ->addEmployee(new Employee(new Analyst(), new NewbeeRank()), 3)
+    ->addEmployee(new Employee(new Analyst(), new MiddleRank()), 2)
+    ->addEmployee(new Employee(new Manager(), new MiddleRank(), true));
 
 $ad = (new Department('рекламы'))
-    ->addEmployee(new Employee(new Marketer(), new Rank(1)), 15)
-    ->addEmployee(new Employee(new Marketer(), new Rank(2)), 10)
-    ->addEmployee(new Employee(new Manager(), new Rank(1)), 8)
-    ->addEmployee(new Employee(new Engineer(), new Rank(1)), 2)
-    ->addEmployee(new Employee(new Marketer(), new Rank(3), true));
+    ->addEmployee(new Employee(new Marketer(), new NewbeeRank()), 15)
+    ->addEmployee(new Employee(new Marketer(), new MiddleRank()), 10)
+    ->addEmployee(new Employee(new Manager(), new NewbeeRank()), 8)
+    ->addEmployee(new Employee(new Engineer(), new NewbeeRank()), 2)
+    ->addEmployee(new Employee(new Marketer(), new SeniorRank(), true));
 
 $logistics = (new Department('логистики'))
-    ->addEmployee(new Employee(new Manager(), new Rank(1)), 13)
-    ->addEmployee(new Employee(new Manager(), new Rank(2)), 5)
-    ->addEmployee(new Employee(new Engineer(), new Rank(1)), 5)
-    ->addEmployee(new Employee(new Manager(), new Rank(1), true));
+    ->addEmployee(new Employee(new Manager(), new NewbeeRank()), 13)
+    ->addEmployee(new Employee(new Manager(), new MiddleRank()), 5)
+    ->addEmployee(new Employee(new Engineer(), new NewbeeRank()), 5)
+    ->addEmployee(new Employee(new Manager(), new NewbeeRank(), true));
 
 $vector->addDepartment($purchasing);
 $vector->addDepartment($sells);

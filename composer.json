@@ -6,6 +6,13 @@
     },
     "require": {
         "phpunit/phpunit": "^9.5",
-        "ramsey/collection": "^1.2"
+        "ramsey/collection": "^1.2",
+        "symfony/var-dumper": "^6.1",
+        "infection/infection": "^0.26.12"
+    },
+    "config": {
+        "allow-plugins": {
+            "infection/extension-installer": true
+        }
     }
 }

@@ -7,7 +7,9 @@ namespace App;
 use App\Jobs\Analyst;
 use App\Jobs\Engineer;
 use App\Jobs\Manager;
-use App\ValueObjects\Rank;
+use App\ValueObjects\Ranks\MiddleRank;
+use App\ValueObjects\Ranks\NewbeeRank;
+use App\ValueObjects\Ranks\SeniorRank;
 
 class AntiCrisisCommittee
 {
@@ -79,18 +81,18 @@ class AntiCrisisCommittee
         $iteration = 0;
 
         foreach ($this->company->getDepartments() as $department) {
-            $employeesFirstRank = $department->getEmployeesByJobAndRank(new Manager(), new Rank(1));
-            $employeesSecondRank = $department->getEmployeesByJobAndRank(new Manager(), new Rank(2));
+            $employeesFirstRank = $department->getEmployeesByJobAndRank(new Manager(), new NewbeeRank());
+            $employeesSecondRank = $department->getEmployeesByJobAndRank(new Manager(), new MiddleRank());
 
             for ($i = 0; $i < intval(ceil(count($employeesSecondRank) * self::PERCENT_RANK_UP_EMPLOYEE_OF_FIRST_RANK)); $i++) {
-                if ($employeesSecondRank[$i]->getRank() == new Rank(2)) {
-                    $employeesSecondRank[$i]->setRank(new Rank(3));
+                if ($employeesSecondRank[$i]->getRank() == new MiddleRank()) {
+                    $employeesSecondRank[$i]->setRank(new SeniorRank());
                 }
             }
 
             for ($i = 0; $i < intval(ceil(count($employeesFirstRank) * self::PERCENT_RANK_UP_EMPLOYEE_OF_SECOND_RANK)); $i++) {
-                if ($employeesFirstRank[$i]->getRank() == new Rank(1)) {
-                    $employeesFirstRank[$i]->setRank(new Rank(2));
+                if ($employeesFirstRank[$i]->getRank() == new NewbeeRank()) {
+                    $employeesFirstRank[$i]->setRank(new MiddleRank());
                 }
             }
 
