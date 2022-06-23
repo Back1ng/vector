@@ -26,11 +26,8 @@ class Employee
 
     /**
      * Расчет зарплаты на основе ранга
-     *
-     * @param Rank $rank
-     * @return float|int
      */
-    private function calculateByRank(Rank $rank)
+    private function calculateByRank(Rank $rank): float|int
     {
         $rate = $this->job->getRate();
 
@@ -39,10 +36,8 @@ class Employee
 
     /**
      * Получить зарплату для сотрудника
-     *
-     * @return float|int
      */
-    public function getRate()
+    public function getRate(): float|int
     {
         $rate = $this->calculateByRank($this->getRank());
 
@@ -54,11 +49,9 @@ class Employee
     }
 
     /**
-     * Получить потребляемое кофе сотрудников
-     *
-     * @return int
+     * Получить потребляемое кофе сотрудника
      */
-    public function getCoffee()
+    public function getCoffee(): int
     {
         $coffee = $this->job->getCoffee();
 
@@ -76,7 +69,9 @@ class Employee
      */
     public function getReport()
     {
-        return $this->isLeader() ? 0 : $this->job->getReport();
+        return $this->isLeader()
+            ? 0
+            : $this->job->getReport();
     }
 
     /**

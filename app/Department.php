@@ -12,22 +12,16 @@ use App\ValueObjects\Ranks\Rank;
 class Department
 {
     /**
-     * Название отдела
-     *
-     * @var string
-     */
-    protected string $name;
-
-    /**
      * Список сотрудников в отделе
      *
      * @var array
      */
     protected array $employees = [];
 
-    public function __construct(string $name)
+    public function __construct(
+        protected string $name
+    )
     {
-        $this->name = $name;
     }
 
     public function __clone()
@@ -76,13 +70,10 @@ class Department
      */
     public function getMoneyExpenses() : float
     {
-        $money = 0;
-
-        foreach ($this->employees as $employee) {
-            $money += $employee->getRate();
-        }
-
-        return $money;
+        return array_sum(array_map(
+            fn(Employee $employee) => $employee->getRate(),
+            $this->getEmployees(),
+        ));
     }
 
     /**
@@ -90,13 +81,10 @@ class Department
      */
     public function getCoffeeExpenses() : int
     {
-        $coffee = 0;
-
-        foreach ($this->employees as $employee) {
-            $coffee += $employee->getCoffee();
-        }
-
-        return $coffee;
+        return array_sum(array_map(
+            fn(Employee $employee) => $employee->getCoffee(),
+            $this->getEmployees(),
+        ));
     }
 
     /**
@@ -104,13 +92,10 @@ class Department
      */
     public function getReports() : float
     {
-        $reports = 0;
-
-        foreach ($this->employees as $employee) {
-            $reports += $employee->getReport();
-        }
-
-        return $reports;
+        return array_sum(array_map(
+            fn(Employee $employee) => $employee->getReport(),
+            $this->getEmployees(),
+        ));
     }
 
     /**
@@ -123,11 +108,9 @@ class Department
 
     public function getConsumptionMoneyPerPage(): float
     {
-        if ($this->getReports() === 0) {
-            return $this->getMoneyExpenses();
-        } else {
-            return round($this->getMoneyExpenses() / $this->getReports(), 2);
-        }
+        return $this->getReports() === 0
+            ? $this->getMoneyExpenses()
+            : round($this->getMoneyExpenses() / $this->getReports(), 2);
     }
 
     /**
@@ -163,15 +146,10 @@ class Department
      */
     public function getEmployeesByJob(Job $job) : array
     {
-        $data = [];
-
-        foreach ($this->employees as $employee) {
-            if ($employee->getJob() instanceof $job) {
-                $data[] = $employee;
-            }
-        }
-
-        return $data;
+        return array_values(array_filter(
+            $this->getEmployees(),
+            fn(Employee $employee) => $employee->getJob() instanceof $job,
+        ));
     }
 
     /**
@@ -179,7 +157,7 @@ class Department
      */
     public function getLeader() : Employee
     {
-        foreach ($this->employees as $employee) {
+        foreach ($this->getEmployees() as $employee) {
             if ($employee->isLeader()) {
                 return $employee;
             }
@@ -193,15 +171,10 @@ class Department
      */
     public function getLeaders() : array
     {
-        $data = [];
-
-        foreach ($this->employees as $employee) {
-            if ($employee->isLeader()) {
-                $data[] = $employee;
-            }
-        }
-
-        return $data;
+        return array_filter(
+            $this->getEmployees(),
+            fn(Employee $employee) => $employee->isLeader(),
+        );
     }
 
     /**
@@ -211,15 +184,10 @@ class Department
      */
     public function getEmployeesByJobAndRank(Job $job, Rank $rank) : array
     {
-        $data = [];
-
-        foreach ($this->getEmployeesByJob($job) as $employee) {
-            if ($employee->getRank()->getValue() === $rank->getValue()) {
-                $data[] = $employee;
-            }
-        }
-
-        return $data;
+        return array_values(array_filter(
+            $this->getEmployeesByJob($job),
+            fn(Employee $employee) => $employee->getRank()->getValue() === $rank->getValue()
+        ));
     }
 
     private function resetKeysEmployees()

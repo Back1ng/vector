@@ -42,9 +42,16 @@ class AntiCrisisCommittee
 
             $engineers = $this->getSortedEmployees($engineers);
 
-            $dismiss = array_slice($engineers, 0, intval(count($engineers) * self::PERCENT_DISMISS_EMPLOYEE));
+            $dismiss = array_slice(
+                $engineers,
+                0,
+                intval(count($engineers) * self::PERCENT_DISMISS_EMPLOYEE)
+            );
 
-            array_walk($dismiss, fn(Employee $employee) => $department->dismissEmployee($employee));
+            array_walk(
+                $dismiss,
+                fn(Employee $employee) => $department->dismissEmployee($employee)
+            );
 
             $iterations++;
         }
@@ -59,13 +66,16 @@ class AntiCrisisCommittee
         foreach ($this->company->getDepartments() as $department) {
             $analytics = $this->getAnalyticsWithChangedExpenses($department);
             $iterations++;
-            if ([] === $analytics) {
+            if (empty($analytics)) {
                 continue;
             }
             $leader = $department->getLeader();
 
             if (!$this->isAnalyst($leader)) {
-                usort($analytics, fn($a, $b) => $a->getRank() <=> $b->getRank());
+                usort(
+                    $analytics,
+                    fn($a, $b) => $a->getRank() <=> $b->getRank()
+                );
 
                 array_pop($analytics)->defineAsLeader();
 
