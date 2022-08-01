@@ -32,8 +32,6 @@ class Department
     }
 
     /**
-     * @param Employee $employee
-     * @param int $count
      * @return $this
      */
     public function addEmployee(Employee $employee, int $count = 1) : self
@@ -49,25 +47,17 @@ class Department
 
     /**
      * Получить список сотрудников в отделе
-     *
-     * @return array
      */
     public function getEmployees(): array
     {
         return $this->employees;
     }
 
-    /**
-     * @return int
-     */
     public function getCountEmployee() : int
     {
         return count($this->employees);
     }
 
-    /**
-     * @return float
-     */
     public function getMoneyExpenses() : float
     {
         return array_sum(array_map(
@@ -76,9 +66,6 @@ class Department
         ));
     }
 
-    /**
-     * @return int
-     */
     public function getCoffeeExpenses() : int
     {
         return array_sum(array_map(
@@ -87,9 +74,6 @@ class Department
         ));
     }
 
-    /**
-     * @return float
-     */
     public function getReports() : float
     {
         return array_sum(array_map(
@@ -98,9 +82,6 @@ class Department
         ));
     }
 
-    /**
-     * @return string
-     */
     public function getName() : string
     {
         return $this->name;
@@ -113,9 +94,6 @@ class Department
             : round($this->getMoneyExpenses() / $this->getReports(), 2);
     }
 
-    /**
-     * @return float
-     */
     public function getAverageConsumptionMoneyPerPage() : float
     {
         if ($this->getCountEmployee() > 0) {
@@ -126,7 +104,6 @@ class Department
     }
 
     /**
-     * @param Employee $employee
      * @return $this
      */
     public function dismissEmployee(Employee $employee) : self
@@ -140,10 +117,6 @@ class Department
         return $this;
     }
 
-    /**
-     * @param Job $job
-     * @return array
-     */
     public function getEmployeesByJob(Job $job) : array
     {
         return array_values(array_filter(
@@ -152,9 +125,6 @@ class Department
         ));
     }
 
-    /**
-     * @return Employee
-     */
     public function getLeader() : Employee
     {
         foreach ($this->getEmployees() as $employee) {
@@ -166,9 +136,6 @@ class Department
         throw new LeaderNotFoundException();
     }
 
-    /**
-     * @return array
-     */
     public function getLeaders() : array
     {
         return array_filter(
@@ -177,11 +144,6 @@ class Department
         );
     }
 
-    /**
-     * @param Job $job
-     * @param Rank $rank
-     * @return array
-     */
     public function getEmployeesByJobAndRank(Job $job, Rank $rank) : array
     {
         return array_values(array_filter(

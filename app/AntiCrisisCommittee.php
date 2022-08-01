@@ -13,20 +13,16 @@ use App\ValueObjects\Ranks\SeniorRank;
 
 class AntiCrisisCommittee
 {
-    private Company $company;
     private const PERCENT_DISMISS_EMPLOYEE = 0.4;
     private const PERCENT_RANK_UP_EMPLOYEE_OF_FIRST_RANK = 0.5;
     private const PERCENT_RANK_UP_EMPLOYEE_OF_SECOND_RANK = 0.5;
 
-    public function __construct(Company $company)
+    public function __construct(private readonly Company $company)
     {
-        $this->company = $company;
     }
 
     /**
      * Получить компанию
-     *
-     * @return Company
      */
     public function getCompany(): Company
     {
@@ -45,7 +41,7 @@ class AntiCrisisCommittee
             $dismiss = array_slice(
                 $engineers,
                 0,
-                intval(count($engineers) * self::PERCENT_DISMISS_EMPLOYEE)
+                intval((is_countable($engineers) ? count($engineers) : 0) * self::PERCENT_DISMISS_EMPLOYEE)
             );
 
             array_walk(
@@ -94,13 +90,13 @@ class AntiCrisisCommittee
             $employeesFirstRank = $department->getEmployeesByJobAndRank(new Manager(), new NewbeeRank());
             $employeesSecondRank = $department->getEmployeesByJobAndRank(new Manager(), new MiddleRank());
 
-            for ($i = 0; $i < intval(ceil(count($employeesSecondRank) * self::PERCENT_RANK_UP_EMPLOYEE_OF_FIRST_RANK)); $i++) {
+            for ($i = 0; $i < intval(ceil((is_countable($employeesSecondRank) ? count($employeesSecondRank) : 0) * self::PERCENT_RANK_UP_EMPLOYEE_OF_FIRST_RANK)); $i++) {
                 if ($employeesSecondRank[$i]->getRank() == new MiddleRank()) {
                     $employeesSecondRank[$i]->setRank(new SeniorRank());
                 }
             }
 
-            for ($i = 0; $i < intval(ceil(count($employeesFirstRank) * self::PERCENT_RANK_UP_EMPLOYEE_OF_SECOND_RANK)); $i++) {
+            for ($i = 0; $i < intval(ceil((is_countable($employeesFirstRank) ? count($employeesFirstRank) : 0) * self::PERCENT_RANK_UP_EMPLOYEE_OF_SECOND_RANK)); $i++) {
                 if ($employeesFirstRank[$i]->getRank() == new NewbeeRank()) {
                     $employeesFirstRank[$i]->setRank(new MiddleRank());
                 }
@@ -133,7 +129,6 @@ class AntiCrisisCommittee
 
     /**
      * @param mixed $department
-     * @return array
      */
     public function getAnalyticsWithChangedExpenses(Department $department): array
     {

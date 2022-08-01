@@ -93,17 +93,11 @@ class Employee
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isLeader(): bool
     {
         return $this->isLeader;
     }
 
-    /**
-     * @return Job
-     */
     public function getJob(): Job
     {
         return $this->job;
@@ -129,9 +123,6 @@ class Employee
     /**
      * Устанавливает новую работу.
      *
-     * @param Job $job
-     * @param Rank $rank
-     * @param bool $isLeader
      * @return $this
      */
     public function setJob(Job $job, Rank $rank, bool $isLeader = false): self

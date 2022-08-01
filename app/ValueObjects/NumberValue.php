@@ -5,7 +5,7 @@ namespace App\ValueObjects;
 abstract class NumberValue
 {
     public function __construct(
-        private int $value,
+        private readonly int $value,
     ) {
 
     }

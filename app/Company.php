@@ -1,8 +1,6 @@
 <?php declare(strict_types=1);
 
-
 namespace App;
-
 
 class Company
 {
@@ -21,7 +19,6 @@ class Company
     }
 
     /**
-     * @param Department $department
      * @return $this
      */
     public function addDepartment(Department $department) : self
@@ -51,9 +48,6 @@ class Company
         );
     }
 
-    /**
-     * @return int
-     */
     public function getCoffeeExpenses(): int
     {
         return array_sum(
@@ -111,9 +105,7 @@ class Company
      */
     public function getAverageConsumptionMoneyPerPage() : float
     {
-        return $this->getReports() === 0
-            ? $this->getMoneyExpenses()
-            : round($this->getMoneyExpenses() / $this->getReports(), 2);
+        return round($this->getMoneyExpenses() / $this->getReports(), 2);
     }
 
     /**
